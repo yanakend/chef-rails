@@ -20,11 +20,21 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine. In the example below,
   # accessing "localhost:8080" will access port 80 on the guest machine.
-  # config.vm.network "forwarded_port", guest: 80, host: 8080
+  #config.vm.network "forwarded_port", guest: 80, host: 8080
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
-  # config.vm.network "private_network", ip: "192.168.33.10"
+  config.vm.network "private_network", ip: "192.168.33.10"
+
+#   config.vm.define "dbmaster" do |dbmaster|
+#     dbmaster.vm.hostname = "dbmaster"
+#     dbmaster.vm.network "private_network", ip: "192.168.33.10"
+#   end
+# 
+#   config.vm.define "dbslave" do |dbslave|
+#     dbslave.vm.hostname = "dbslave"
+#     dbslave.vm.network "private_network", ip: "192.168.33.11"
+#   end
 
   # Create a public network, which generally matched to bridged network.
   # Bridged networks make the machine appear as another physical device on
@@ -86,13 +96,17 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # path, and data_bags path (all relative to this Vagrantfile), and adding
   # some recipes and/or roles.
   #
+  config.omnibus.chef_version = :latest
   config.vm.provision "chef_solo" do |chef|
     chef.cookbooks_path = ['./cookbooks', './site-cookbooks']
-    chef.run_list = [
-      'recipe[yum-epel]',
-      'recipe[nginx]',
-      'recipe[ruby-env]',
-    ]
+    chef.run_list = %w{
+      recipe[yum-epel]
+      recipe[nginx]
+      recipe[iptables]
+      recipe[ruby-env]
+      recipe[nodejs]
+      recipe[mysql]
+    }
   end
 
   # Enable provisioning with chef server, specifying the chef server URL,
