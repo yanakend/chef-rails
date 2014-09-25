@@ -6,7 +6,7 @@
 #
 # All rights reserved - Do Not Redistribute
 #
-%w{mysql mysql-server}.each do |pkg|
+%w{mysql mysql-devel mysql-server}.each do |pkg|
   package pkg do
     action :install
   end
